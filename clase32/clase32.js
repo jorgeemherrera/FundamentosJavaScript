@@ -19,7 +19,6 @@ function obtenerPersonaje(id) {
 function onError(id) {
   console.log(`Sucedió un error al obtener el personaje ${id}`)
 }
-debugger;
 obtenerPersonaje(1)
 
   .then(personaje1 => {

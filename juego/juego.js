@@ -18,6 +18,7 @@ class Juego {
   }
   // Ocultar el botón de empezar a jugar!
   inicializar(){
+    this.elegirColor = this.elegirColor.bind(this)
     btnEmpezar.classList.add('hide')
     this.level = 1
     this.colors = {
@@ -33,6 +34,7 @@ class Juego {
   // Siguiente nivel
   nextLevel() {
     this.iluminarSecuencia()
+    this.agregarEventoClick()
   }
 
   transformarNumeroColor(numero) {
@@ -65,6 +67,19 @@ class Juego {
   apagarColor(color) {
     this.colors[color].classList.remove('light')
   }
+  // Input del usuario
+  agregarEventoClick() {
+    debugger
+    this.colors.celeste.addEventListener('click', this.elegirColor)
+    this.colors.violeta.addEventListener('click', this.elegirColor)
+    this.colors.naranja.addEventListener('click', this.elegirColor)
+    this.colors.verde.addEventListener('click', this.elegirColor)
+  }
+
+  elegirColor(ev) {
+    console.log(this)
+  }
+  
 }
 
 function empezarJuego() {

@@ -6,6 +6,7 @@ const violeta = document.getElementById('violeta')
 const naranja = document.getElementById('naranja')
 const verde = document.getElementById('verde')
 const btnEmpezar = document.getElementById('btnEmpezar')
+const LAST_LEVEL = 10
 
 /**
  * Class
@@ -14,10 +15,11 @@ class Juego {
   constructor() {
     this.inicializar()
     this.generarSecuencia()
-    this.nextLevel()
+    setTimeout(this.nextLevel(), 500)
   }
   // Ocultar el botón de empezar a jugar!
   inicializar(){
+    this.nextLevel = this.nextLevel.bind(this)
     this.elegirColor = this.elegirColor.bind(this)
     btnEmpezar.classList.add('hide')
     this.level = 1
@@ -25,14 +27,16 @@ class Juego {
       celeste,
       violeta,
       naranja,
+      verde
     }
   }
   // Juego {secuencia: Array(10)}
   generarSecuencia() {
-    this.secuencia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
+    this.secuencia = new Array(LAST_LEVEL).fill(0).map(n => Math.floor(Math.random() * 4))
   }
   // Siguiente nivel
   nextLevel() {
+    this.subLevel = 0
     this.iluminarSecuencia()
     this.agregarEventoClick()
   }
@@ -47,6 +51,18 @@ class Juego {
         return 'naranja'
       case 3:
         return 'verde'
+    }
+  }
+  transformarColorNumero(color) {
+    switch(color) {
+      case 'celeste':
+        return 0
+      case 'violeta':
+        return 1
+      case 'naranja':
+        return 2
+      case 'verde':
+        return 3
     }
   }
   /**
@@ -69,17 +85,42 @@ class Juego {
   }
   // Input del usuario
   agregarEventoClick() {
-    debugger
     this.colors.celeste.addEventListener('click', this.elegirColor)
     this.colors.violeta.addEventListener('click', this.elegirColor)
     this.colors.naranja.addEventListener('click', this.elegirColor)
     this.colors.verde.addEventListener('click', this.elegirColor)
   }
 
-  elegirColor(ev) {
-    console.log(this)
+  eliminarEventosClick() {
+    this.colors.celeste.removeEventListener('click', this.elegirColor)
+    this.colors.violeta.removeEventListener('click', this.elegirColor)
+    this.colors.naranja.removeEventListener('click', this.elegirColor)
+    this.colors.verde.removeEventListener('click', this.elegirColor)
   }
-  
+
+  /**
+   * data-color: dataset --> color que tocó el usuario
+   * @param {*} ev 
+   */
+  elegirColor(ev) {
+   const nameColor = ev.target.dataset.color
+   const numberColor = this.transformarColorNumero(nameColor)
+   this.iluminarColor(nameColor)
+   if (numberColor === this.secuencia[this.subLevel]) {
+     this.subLevel++
+     if (this.subLevel === this.level) {
+       this.level ++
+       this.eliminarEventosClick()
+       if (this.nivel === (LAST_LEVEL + 1)) {
+         // gano
+       } else {
+         setTimeout(this.nextLevel(), 1500)
+       }
+     }
+   } else {
+    // perdio
+    }
+  }
 }
 
 function empezarJuego() {
